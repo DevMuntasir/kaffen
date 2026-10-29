@@ -66,9 +66,7 @@ export function Footer() {
       </div>
       <div className="container copyright">
         Copyright © 2026 Kaffen | Design by{" "}
-        <a href="https://bslthemes.com/" target="_blank" rel="noreferrer">
-          bslthemes
-        </a>
+    
       </div>
     </footer>
   );
