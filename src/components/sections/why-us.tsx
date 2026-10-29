@@ -1,0 +1,5 @@
+import { SectionHeading } from "@/components/ui/section-heading";
+import { Photo } from "@/components/ui/photo";
+import { ButtonLink } from "@/components/ui/button";
+import { description } from "@/data/site";
+export function WhyUs() { return <section className="section why-section"><div className="container why-grid"><Photo file="choose_img-900x600.jpg" alt="Barista preparing fresh coffee at the espresso machine" className="why-photo" width={900} height={1000}/><div><SectionHeading eyebrow="Why choose us" title="New London Coffee Founded For Extraordinary Test"/><p className="body-copy">{description}</p><div className="features">{[{title:"Natural Coffee Beans",image:"choose_icon1.png"},{title:"100% ISO Certification",image:"choose_icon2.png"}].map(item => <div className="feature" key={item.title}><Photo file={item.image} alt="" width={70} height={70}/><div><h3>{item.title}</h3><p>Sed ut perspiciatis unde omnis iste natus error voluptate accusantium doloremque</p></div></div>)}</div><ButtonLink href="#menu">Explore more</ButtonLink></div></div></section>; }

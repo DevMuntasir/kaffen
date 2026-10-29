@@ -1,0 +1,12 @@
+"use client";
+import { useState } from "react";
+import { Clock3, MapPin, Menu, X, ChevronDown, Instagram, Facebook, Twitter, Youtube } from "lucide-react";
+import { site } from "@/data/site";
+import { Photo } from "@/components/ui/photo";
+import { Button } from "@/components/ui/button";
+const links = [{ label: "Home", href: "#home", children: [{label:"Coffee House",href:"#home"}] }, { label: "About", href: "#about" }, {label:"Menu",href:"#menu",children:[{label:"Coffee Menu",href:"#menu"},{label:"Food Services",href:"#services"}]}, {label:"Pages",href:"#gallery",children:[{label:"Gallery",href:"#gallery"},{label:"Customer Reviews",href:"#reviews"},{label:"Reservation",href:"#booking"}]}, {label:"Blog",href:"#news"}, {label:"Shop",href:"#menu"}, {label:"Contacts",href:"#contact"}];
+export function SocialLinks() { return <div className="social-links">{[{Icon:Facebook,name:"Facebook",url:"https://www.facebook.com/"},{Icon:Twitter,name:"Twitter",url:"https://twitter.com/"},{Icon:Instagram,name:"Instagram",url:"https://www.instagram.com/"},{Icon:Youtube,name:"YouTube",url:"https://www.youtube.com/"}].map(({Icon,name,url}) => <a key={name} href={url} target="_blank" rel="noreferrer" aria-label={name}><Icon size={15}/></a>)}</div>; }
+export function Header({ onBook }: { onBook: () => void }) {
+  const [open,setOpen] = useState(false);
+  return <header className="site-header"><div className="topbar"><p><Clock3 size={15}/><span>Opening hours :</span> {site.hours}</p><SocialLinks/><p><MapPin size={16}/><span>Location :</span> {site.address}</p></div><div className="navbar"><a href="#home" aria-label="Kaffen home"><Photo file="logo.png" alt="Kaffen" className="brand" width={118} height={80}/></a><nav aria-label="Main navigation" className={open ? "navigation is-open" : "navigation"} id="main-navigation" onKeyDown={e => { if(e.key === "Escape") setOpen(false); }}><ul>{links.map(link => <li key={link.label}><a href={link.href} onClick={() => setOpen(false)}>{link.label}{link.children && <ChevronDown size={12}/>}</a>{link.children && <ul className="dropdown">{link.children.map(child => <li key={child.label}><a href={child.href} onClick={() => setOpen(false)}>{child.label}</a></li>)}</ul>}</li>)}</ul></nav><div className="nav-actions"><Button onClick={onBook}>Book a table</Button><button className="icon-button mobile-toggle" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="main-navigation" onClick={() => setOpen(!open)}>{open ? <X/> : <Menu/>}</button></div></div></header>;
+}

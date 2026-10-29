@@ -1,0 +1,27 @@
+/* Shared semantic tokens: change the brand here, not in individual sections. */
+:root {
+  color-scheme: dark;
+  --color-background: #090c0f;
+  --color-surface: #0e1317;
+  --color-accent: #b99272;
+  --color-text: #ffffff;
+  --color-muted: #9ea1a2;
+  --color-border: #ffffff1a;
+  --font-body: "Roboto", Arial, sans-serif;
+  --font-heading: "Oswald", "Arial Narrow", sans-serif;
+  --font-editorial: "Playfair Display", Georgia, serif;
+  --font-experience: "Inter", Arial, sans-serif;
+  --color-midnight: #0f0f0f;
+  --color-gold: #c69c6d;
+  --ease-reveal: cubic-bezier(.22, 1, .36, 1);
+  --font-price: "Merienda", cursive;
+  --container: 1170px;
+  --section-space: 130px;
+  --radius: 5px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 30px;
+  --space-5: 50px;
+  --transition: 300ms ease;
+}
