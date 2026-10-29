@@ -14,7 +14,7 @@ export function Hero({ onDelivery }: { onDelivery: () => void }) {
       </div>
       <HeroCup />
       <div className="midnight-content">
-        <p className="midnight-kicker">Kaffen · The after-dark collection</p>
+        {/* <p className="midnight-kicker">Kaffen · The after-dark collection</p> */}
         <h1>Midnight Roast</h1>
         <p className="midnight-description">
           Crafted in the shadows, brewed for the bold. <br />

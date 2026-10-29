@@ -41,10 +41,15 @@ export function Header({ onBook }: { onBook: () => void }) {
       if (!root.current?.contains(event.target as Node)) setOpen(false);
     };
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") { setOpen(false); toggle.current?.focus(); }
+      if (event.key === "Escape") {
+        setOpen(false);
+        toggle.current?.focus();
+      }
     };
     const desktop = window.matchMedia("(min-width: 1101px)");
-    const closeOnDesktop = () => { if (desktop.matches) setOpen(false); };
+    const closeOnDesktop = () => {
+      if (desktop.matches) setOpen(false);
+    };
     document.addEventListener("pointerdown", closeOutside);
     document.addEventListener("keydown", closeOnEscape);
     desktop.addEventListener("change", closeOnDesktop);
@@ -58,20 +63,63 @@ export function Header({ onBook }: { onBook: () => void }) {
   return (
     <header ref={root} className={styles.header}>
       <div className={styles.inner}>
-        <a href="#home" className={styles.brand} aria-label="Kaffen home" onClick={() => setOpen(false)}>
-          <span className={styles.emblem}><Bean size={24} strokeWidth={1.25} aria-hidden="true" /></span>
-          <span className={styles.wordmark}>Kaffen<span className={styles.brandNote}>Coffee & conversation</span></span>
+        <a
+          href="#home"
+          className={styles.brand}
+          aria-label="Kaffen home"
+          onClick={() => setOpen(false)}
+        >
+          <span className={styles.emblem}>
+            <Bean size={24} strokeWidth={1.25} aria-hidden="true" />
+          </span>
+          <span className={styles.wordmark}>
+            Kaffen<span className={styles.brandNote}>Coffee & conversation</span>
+          </span>
         </a>
-        <nav id="main-navigation" aria-label="Main navigation" className={`${styles.navigation} ${open ? styles.open : ""}`}>
+        <nav
+          data-lenis-prevent
+          id="main-navigation"
+          aria-label="Main navigation"
+          className={`${styles.navigation} ${open ? styles.open : ""}`}
+        >
           <span className={styles.mobileEyebrow}>Discover Kaffen</span>
-          <ul>{links.map((link, index) => <li key={link.href}>
-            <a href={link.href} onClick={() => setOpen(false)}><span className={styles.linkNumber}>0{index + 1}</span>{link.label}<ArrowUpRight className={styles.linkArrow} size={18} aria-hidden="true" /></a>
-          </li>)}</ul>
-          <div className={styles.mobileInfo}><span>Slow moments. Exceptional coffee.</span><span>{site.hours}</span></div>
+          <ul>
+            {links.map((link, index) => (
+              <li key={link.href}>
+                <a href={link.href} onClick={() => setOpen(false)}>
+                  <span className={styles.linkNumber}>0{index + 1}</span>
+                  {link.label}
+                  <ArrowUpRight className={styles.linkArrow} size={18} aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <div className={styles.mobileInfo}>
+            <span>Slow moments. Exceptional coffee.</span>
+            <span>{site.hours}</span>
+          </div>
         </nav>
         <div className={styles.actions}>
-          <button className={styles.reserve} onClick={() => { setOpen(false); onBook(); }}>Book a table<ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" /></button>
-          <button ref={toggle} className={styles.toggle} aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="main-navigation" onClick={() => setOpen(value => !value)}>{open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}</button>
+          <button
+            className={styles.reserve}
+            onClick={() => {
+              setOpen(false);
+              onBook();
+            }}
+          >
+            Book a table
+            <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
+          </button>
+          <button
+            ref={toggle}
+            className={styles.toggle}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+            aria-controls="main-navigation"
+            onClick={() => setOpen((value) => !value)}
+          >
+            {open ? <X size={22} strokeWidth={1.5} /> : <Menu size={22} strokeWidth={1.5} />}
+          </button>
         </div>
       </div>
     </header>

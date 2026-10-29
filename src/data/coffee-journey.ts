@@ -2,7 +2,7 @@ export const coffeeJourney = [
   {
     step: "01",
     title: "The Selection",
-    subtitle: "Origin & Sourcing",
+    subtitle: "",
     description:
       "We source only the finest Grade 1 Arabica beans from high-altitude volcanic soils in Ethiopia, Colombia, and Guatemala — hand-picked at peak ripeness.",
     color: "#5a7a28",
@@ -18,7 +18,7 @@ export const coffeeJourney = [
   {
     step: "02",
     title: "The Roast",
-    subtitle: "Precision Craftsmanship",
+    subtitle: "",
     description:
       "Our master roasters coax out complex flavors through a careful 14-minute profile roast at exactly 204°C — unlocking dark chocolate, toffee, and aromatic citrus top notes.",
     color: "#C69C6D",
@@ -34,7 +34,7 @@ export const coffeeJourney = [
   {
     step: "03",
     title: "The Midnight Finish",
-    subtitle: "The Dark Art",
+    subtitle: "",
     description:
       "A second-crack extended dark roast transforms the bean — creating a dense, smoky, full-bodied cup with caramelized sweetness that defines the Midnight Roast signature.",
     color: "#3B2010",
