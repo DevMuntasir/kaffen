@@ -6,7 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motionSettings } from "@/data/motion";
 
 gsap.registerPlugin(ScrollTrigger);
-const ScrollContext = createContext<{ pause: () => void; resume: () => void }>({ pause: () => {}, resume: () => {} });
+const ScrollContext = createContext<{ pause: () => void; resume: () => void }>({
+  pause: () => {},
+  resume: () => {},
+});
 export const useSmoothScroll = () => useContext(ScrollContext);
 
 export function MotionProvider({ children }: { children: ReactNode }) {
@@ -18,20 +21,55 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     const setup = () => {
       cleanup();
       if (media.matches) return;
-      const scroll = new Lenis({ duration: motionSettings.scrollDuration, easing: motionSettings.scrollEase, smoothWheel: true, syncTouch: false, anchors: { offset: -24 }, prevent: node => node.tagName === "DIALOG" || node.hasAttribute("data-lenis-prevent") });
+      const scroll = new Lenis({
+        duration: motionSettings.scrollDuration,
+        easing: motionSettings.scrollEase,
+        smoothWheel: true,
+        syncTouch: false,
+        anchors: { offset: -24 },
+        prevent: (node) => node.tagName === "DIALOG" || node.hasAttribute("data-lenis-prevent"),
+      });
       lenis.current = scroll;
       if (locks.current) scroll.stop();
       scroll.on("scroll", ScrollTrigger.update);
       const tick = (time: number) => scroll.raf(time * 1000);
       gsap.ticker.add(tick);
-      const refresh = () => { scroll.resize(); ScrollTrigger.refresh(); };
+      const refresh = () => {
+        scroll.resize();
+        ScrollTrigger.refresh();
+      };
       const timer = window.setTimeout(refresh, 250);
       document.fonts.ready.then(refresh);
       window.addEventListener("load", refresh);
-      cleanup = () => { clearTimeout(timer); window.removeEventListener("load", refresh); gsap.ticker.remove(tick); scroll.destroy(); lenis.current = null; };
+      cleanup = () => {
+        clearTimeout(timer);
+        window.removeEventListener("load", refresh);
+        gsap.ticker.remove(tick);
+        scroll.destroy();
+        lenis.current = null;
+      };
     };
-    setup(); media.addEventListener("change", setup);
-    return () => { media.removeEventListener("change", setup); cleanup(); };
+    setup();
+    media.addEventListener("change", setup);
+    return () => {
+      media.removeEventListener("change", setup);
+      cleanup();
+    };
   }, []);
-  return <ScrollContext.Provider value={{ pause: () => { locks.current++; lenis.current?.stop(); }, resume: () => { locks.current = Math.max(0, locks.current - 1); if (!locks.current) lenis.current?.start(); } }}>{children}</ScrollContext.Provider>;
+  return (
+    <ScrollContext.Provider
+      value={{
+        pause: () => {
+          locks.current++;
+          lenis.current?.stop();
+        },
+        resume: () => {
+          locks.current = Math.max(0, locks.current - 1);
+          if (!locks.current) lenis.current?.start();
+        },
+      }}
+    >
+      {children}
+    </ScrollContext.Provider>
+  );
 }

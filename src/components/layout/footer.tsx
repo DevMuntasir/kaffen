@@ -2,4 +2,74 @@ import { MapPin, Mail, Phone } from "lucide-react";
 import { site, gallery } from "@/data/site";
 import { Photo } from "@/components/ui/photo";
 import { SocialLinks } from "./header";
-export function Footer() { return <footer id="contact" className="footer"><div className="container footer-grid"><div><a href="#home" aria-label="Kaffen home"><Photo file="logo.png" alt="Kaffen" className="brand" width={118} height={80}/></a><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus, luctus nec.</p><SocialLinks/></div><div><h3>Working Hours</h3><ul className="hours"><li>Sunday - Thursday<span>08:00 am - 09:00pm</span></li><li>Only Friday<span>03:00 pm - 09:00pm</span></li><li>Saturday<strong>Closed</strong></li></ul></div><div><h3>Contact Us</h3><ul className="contact-list"><li><MapPin/><div><span>Location :</span>{site.address}</div></li><li><Mail/><div><span>Email Address :</span><a href={`mailto:${site.email}`}>{site.email}</a></div></li><li><Phone/><div><span>Phone Number :</span><a href="tel:+01234567899">{site.phone}</a></div></li></ul></div><div><h3>Follow Instagram</h3><div className="instagram-grid">{[...gallery,gallery[0]].map((item,i)=><a key={i} href="#gallery" aria-label={`View coffee gallery photo ${i+1}`}><Photo file={item.image} alt={item.name} width={100} height={100}/></a>)}</div></div></div><div className="container copyright">Copyright © 2026 Kaffen | Design by <a href="https://bslthemes.com/" target="_blank" rel="noreferrer">bslthemes</a></div></footer>; }
+export function Footer() {
+  return (
+    <footer id="contact" className="footer">
+      <div className="container footer-grid">
+        <div>
+          <a href="#home" aria-label="Kaffen home">
+            <Photo file="logo.png" alt="Kaffen" className="brand" width={118} height={80} />
+          </a>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus, luctus nec.</p>
+          <SocialLinks />
+        </div>
+        <div>
+          <h3>Working Hours</h3>
+          <ul className="hours">
+            <li>
+              Sunday - Thursday<span>08:00 am - 09:00pm</span>
+            </li>
+            <li>
+              Only Friday<span>03:00 pm - 09:00pm</span>
+            </li>
+            <li>
+              Saturday<strong>Closed</strong>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Contact Us</h3>
+          <ul className="contact-list">
+            <li>
+              <MapPin />
+              <div>
+                <span>Location :</span>
+                {site.address}
+              </div>
+            </li>
+            <li>
+              <Mail />
+              <div>
+                <span>Email Address :</span>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+              </div>
+            </li>
+            <li>
+              <Phone />
+              <div>
+                <span>Phone Number :</span>
+                <a href="tel:+01234567899">{site.phone}</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3>Follow Instagram</h3>
+          <div className="instagram-grid">
+            {[...gallery, gallery[0]].map((item, i) => (
+              <a key={i} href="#gallery" aria-label={`View coffee gallery photo ${i + 1}`}>
+                <Photo file={item.image} alt={item.name} width={100} height={100} />
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="container copyright">
+        Copyright © 2026 Kaffen | Design by{" "}
+        <a href="https://bslthemes.com/" target="_blank" rel="noreferrer">
+          bslthemes
+        </a>
+      </div>
+    </footer>
+  );
+}

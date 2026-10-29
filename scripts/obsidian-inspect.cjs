@@ -1,2 +1,34 @@
-const { chromium } = require('@playwright/test');
-(async()=>{const browser=await chromium.launch({headless:true,executablePath:"C:/Users/munta/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe"});const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});await page.goto('https://obsidianbrew.vercel.app/',{waitUntil:'networkidle',timeout:60000});await page.getByText('Enter Midnight Roast',{exact:true}).click();await page.waitForTimeout(3000);await page.mouse.move(850,350);await page.screenshot({path:'docs/obsidian-hero.png'});for(let y=0;y<8000;y+=600){await page.evaluate(y=>window.scrollTo(0,y),y);await page.waitForTimeout(250);}await page.evaluate(()=>window.scrollTo(0,0));await page.waitForTimeout(1000);await page.screenshot({path:'docs/obsidian-reference.png',fullPage:true});console.log(await page.locator('h1,h2').allTextContents());await page.getByText('The Selection',{exact:true}).evaluate(el=>el.closest('.overflow-hidden').scrollIntoView());await page.waitForTimeout(2000);await page.screenshot({path:'docs/obsidian-journey.png'});await browser.close();})().catch(e=>{console.error(e);process.exit(1)});
+const { chromium } = require("@playwright/test");
+(async () => {
+  const browser = await chromium.launch({
+    headless: true,
+    executablePath:
+      "C:/Users/munta/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe",
+  });
+  const page = await browser.newPage({
+    viewport: { width: 1440, height: 1000 },
+    deviceScaleFactor: 1,
+  });
+  await page.goto("https://obsidianbrew.vercel.app/", { waitUntil: "networkidle", timeout: 60000 });
+  await page.getByText("Enter Midnight Roast", { exact: true }).click();
+  await page.waitForTimeout(3000);
+  await page.mouse.move(850, 350);
+  await page.screenshot({ path: "docs/obsidian-hero.png" });
+  for (let y = 0; y < 8000; y += 600) {
+    await page.evaluate((y) => window.scrollTo(0, y), y);
+    await page.waitForTimeout(250);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(1000);
+  await page.screenshot({ path: "docs/obsidian-reference.png", fullPage: true });
+  console.log(await page.locator("h1,h2").allTextContents());
+  await page
+    .getByText("The Selection", { exact: true })
+    .evaluate((el) => el.closest(".overflow-hidden").scrollIntoView());
+  await page.waitForTimeout(2000);
+  await page.screenshot({ path: "docs/obsidian-journey.png" });
+  await browser.close();
+})().catch((e) => {
+  console.error(e);
+  process.exit(1);
+});

@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+test-results
+playwright-report
+*.tsbuildinfo
+.git
+docs/*.png
+docs/*.jpg
+docs/*.webp
+public

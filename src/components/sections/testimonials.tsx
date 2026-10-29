@@ -3,5 +3,64 @@ import { useState } from "react";
 import { reviews } from "@/data/site";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { Photo } from "@/components/ui/photo";
-export function Testimonials() { const [page,setPage]=useState(0); return <section id="reviews" className="section reviews-section"><div className="container"><SectionHeading eyebrow="Customer feedback" title="What Our Clients Say" centered/><div className="reviews-grid">{reviews.map((_,i)=>{ const item=reviews[(i+page)%reviews.length];return <article className="review-card" key={`${i}-${page}`}><Photo file={item.image} alt={item.name} width={70} height={70}/><div className="stars" aria-label="5 out of 5 stars">★★★★★</div><p>Sed ut perspiciatis unde omnis natus error luptatem accusantium doloremque laudantium totam remriam eaque quae abillo</p><h3>{item.name}</h3><span>{item.role}</span></article>;})}</div><div className="pagination">{[0,1,2].map(i=><button key={i} aria-label={`Reviews page ${i+1}`} aria-pressed={i===page} className={i===page?"is-active":""} onClick={()=>setPage(i)}/>)}</div></div></section>; }
-export function Statistics() { return <section className="statistics" aria-label="Coffee house statistics"><div className="container stats-grid">{[{n:"256+",title:"Premium Clients"},{n:"362+",title:"Expert Members"},{n:"753+",title:"Winning Awards"}].map(item=><div className="stat" key={item.title}><span>{item.n}</span><div><h3>{item.title}</h3><p>Sed ut perspiciatis unde</p></div></div>)}</div></section>; }
+export function Testimonials() {
+  const [page, setPage] = useState(0);
+  return (
+    <section id="reviews" className="section reviews-section">
+      <div className="container">
+        <SectionHeading eyebrow="Customer feedback" title="What Our Clients Say" centered />
+        <div className="reviews-grid">
+          {reviews.map((_, i) => {
+            const item = reviews[(i + page) % reviews.length];
+            return (
+              <article className="review-card" key={`${i}-${page}`}>
+                <Photo file={item.image} alt={item.name} width={70} height={70} />
+                <div className="stars" aria-label="5 out of 5 stars">
+                  ★★★★★
+                </div>
+                <p>
+                  Sed ut perspiciatis unde omnis natus error luptatem accusantium doloremque
+                  laudantium totam remriam eaque quae abillo
+                </p>
+                <h3>{item.name}</h3>
+                <span>{item.role}</span>
+              </article>
+            );
+          })}
+        </div>
+        <div className="pagination">
+          {[0, 1, 2].map((i) => (
+            <button
+              key={i}
+              aria-label={`Reviews page ${i + 1}`}
+              aria-pressed={i === page}
+              className={i === page ? "is-active" : ""}
+              onClick={() => setPage(i)}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+export function Statistics() {
+  return (
+    <section className="statistics" aria-label="Coffee house statistics">
+      <div className="container stats-grid">
+        {[
+          { n: "256+", title: "Premium Clients" },
+          { n: "362+", title: "Expert Members" },
+          { n: "753+", title: "Winning Awards" },
+        ].map((item) => (
+          <div className="stat" key={item.title}>
+            <span>{item.n}</span>
+            <div>
+              <h3>{item.title}</h3>
+              <p>Sed ut perspiciatis unde</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}

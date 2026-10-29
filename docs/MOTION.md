@@ -4,15 +4,15 @@ Reference investigated: https://obsidianbrew.vercel.app/ on 2026-10-29. The live
 
 ## Reference behavior and implementation
 
-| Feature | Reference | Local implementation |
-| --- | --- | --- |
-| Scroll | Lenis, duration 1.2, exponential ease-out | Same duration/easing in `src/data/motion.ts`, driven by one GSAP ticker |
-| Cursor | Gold point/glow with rising elliptical particles | Matching canvas trail plus a small coffee-bean follower requested by the user |
-| Horizontal journey | Three 100vw panels, 2000px pinned scroll, 0.5s scrub | GSAP ScrollTrigger, same travel and timing; responsive width recalculation |
-| Journey design | Selection / Roast / Midnight Finish; alternating copy/image; floating SVG beans | Same copy, source photos, stats, tags, colors, Playfair/Inter typography and composition |
-| Hero | Dark photographic background, large italic title, rotating Three.js cup, steam, gold pill CTA | Midnight-inspired hero with Kaffen identity and existing delivery interaction |
-| Reveals | Smooth fade/translate/blur, repeatable on scrolling | Scoped GSAP reveal primitives with stagger and reverse-on-return behavior |
-| Decorations | Floating beans and parallax | Reusable `FloatingBeans` and `CoffeeBean` with section-specific color variants |
+| Feature            | Reference                                                                                     | Local implementation                                                                     |
+| ------------------ | --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Scroll             | Lenis, duration 1.2, exponential ease-out                                                     | Same duration/easing in `src/data/motion.ts`, driven by one GSAP ticker                  |
+| Cursor             | Gold point/glow with rising elliptical particles                                              | Matching canvas trail plus a small coffee-bean follower requested by the user            |
+| Horizontal journey | Three 100vw panels, 2000px pinned scroll, 0.5s scrub                                          | GSAP ScrollTrigger, same travel and timing; responsive width recalculation               |
+| Journey design     | Selection / Roast / Midnight Finish; alternating copy/image; floating SVG beans               | Same copy, source photos, stats, tags, colors, Playfair/Inter typography and composition |
+| Hero               | Dark photographic background, large italic title, rotating Three.js cup, steam, gold pill CTA | Midnight-inspired hero with Kaffen identity and existing delivery interaction            |
+| Reveals            | Smooth fade/translate/blur, repeatable on scrolling                                           | Scoped GSAP reveal primitives with stagger and reverse-on-return behavior                |
+| Decorations        | Floating beans and parallax                                                                   | Reusable `FloatingBeans` and `CoffeeBean` with section-specific color variants           |
 
 ## Components
 
