@@ -107,7 +107,7 @@ export function Header({ onBook }: { onBook: () => void }) {
               onBook();
             }}
           >
-            Book a table
+            Contact Us
             <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
           </button>
           <button
