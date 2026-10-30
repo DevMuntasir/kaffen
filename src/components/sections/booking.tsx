@@ -25,7 +25,7 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
     setSubmitted(true);
   }
   return (
-    <Modal title="Book a table" onClose={onClose}>
+    <Modal title="Contact with us" onClose={onClose}>
       {submitted ? (
         <div role="status">
           <p className="eyebrow">Demo request completed</p>

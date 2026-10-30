@@ -36,7 +36,7 @@ test("smooth scrolling, cursor, horizontal journey and dialog scroll lock", asyn
   }
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.waitForTimeout(800);
-  await page.getByRole("button", { name: "Book a table", exact: true }).click();
+  await page.getByRole("button", { name: "Contact Us", exact: true }).click();
   const before = await page.evaluate(() => scrollY);
   await page.mouse.move(30, 200);
   await page.mouse.wheel(0, 800);
