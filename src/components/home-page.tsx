@@ -9,8 +9,9 @@ import { CoffeeJourney } from "./sections/coffee-journey";
 import { WhyUs } from "./sections/why-us";
 import { Gallery } from "./sections/gallery";
 import { Testimonials, Statistics } from "./sections/testimonials";
-import { News } from "./sections/news";
-import { BookingBanner, BookingModal } from "./sections/booking";
+// import { News } from "./sections/news";
+// import { BookingBanner } from "./sections/booking";
+import { BookingModal } from "./sections/booking";
 import { Modal } from "./ui/modal";
 import { ButtonLink } from "./ui/button";
 import { MotionProvider } from "./motion/motion-provider";
@@ -52,6 +53,7 @@ export function HomePage() {
         <Reveal>
           <Statistics />
         </Reveal>
+        {/* Temporarily disabled; keep these sections available for reuse.
         <Reveal>
           <FloatingBeans />
           <News />
@@ -59,6 +61,7 @@ export function HomePage() {
         <Reveal>
           <BookingBanner onBook={book} />
         </Reveal>
+        */}
       </main>
       <Reveal>
         <Footer />
