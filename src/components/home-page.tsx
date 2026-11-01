@@ -10,8 +10,7 @@ import { WhyUs } from "./sections/why-us";
 import { Gallery } from "./sections/gallery";
 import { Testimonials, Statistics } from "./sections/testimonials";
 // import { News } from "./sections/news";
-// import { BookingBanner } from "./sections/booking";
-import { BookingModal } from "./sections/booking";
+import { BookingBanner, BookingModal } from "./sections/booking";
 import { Modal } from "./ui/modal";
 import { ButtonLink } from "./ui/button";
 import { MotionProvider } from "./motion/motion-provider";
@@ -58,10 +57,10 @@ export function HomePage() {
           <FloatingBeans />
           <News />
         </Reveal>
+        */}
         <Reveal>
           <BookingBanner onBook={book} />
         </Reveal>
-        */}
       </main>
       <Reveal>
         <Footer />

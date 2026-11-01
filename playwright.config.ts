@@ -22,7 +22,8 @@ export default defineConfig({
   webServer: {
     command: "node scripts/preview.cjs",
     url: "http://localhost:3100",
-    reuseExistingServer: true,
+    reuseExistingServer: false,
+    env: { RESERVATION_DATA_DIR: path.resolve(".data", `e2e-${Date.now()}`) },
     timeout: 120000,
   },
 });

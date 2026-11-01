@@ -57,7 +57,7 @@ export function BeanCursor() {
         follower.style.transform = `translate3d(${fx + 14}px,${fy + 15}px,0) rotate(${angle}deg)`;
         if (active) {
           const glow = ctx.createRadialGradient(x, y, 0, x, y, 40);
-          glow.addColorStop(0, "rgba(198,156,109,.2)");
+          glow.addColorStop(0, "rgba(198,156,109,.08)");
           glow.addColorStop(1, "rgba(198,156,109,0)");
           ctx.fillStyle = glow;
           ctx.fillRect(x - 40, y - 40, 80, 80);
@@ -79,7 +79,7 @@ export function BeanCursor() {
           ctx.rotate(p.rotation);
           ctx.beginPath();
           ctx.ellipse(0, 0, p.size, p.size * 0.6, 0, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${p.color},${Math.max(0, p.life) ** 2 * 0.15})`;
+          ctx.fillStyle = `rgba(${p.color},${Math.max(0, p.life) ** 2 * 0.06})`;
           ctx.fill();
           ctx.restore();
         });
@@ -96,7 +96,7 @@ export function BeanCursor() {
           fy = y;
         }
         active = true;
-        follower.style.opacity = "1";
+        follower.style.opacity = "0.25";
         for (let i = 0; i < Math.min(Math.floor(speed / 5) + 1, 4); i++)
           particles.push({
             x: x + (Math.random() - 0.5) * 10,

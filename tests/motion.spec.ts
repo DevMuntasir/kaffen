@@ -8,7 +8,7 @@ test("smooth scrolling, cursor, horizontal journey and dialog scroll lock", asyn
   await expect(page.locator("html")).toHaveClass(/lenis/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Midnight Roast");
   await page.mouse.move(700, 350);
-  await expect(page.locator(".bean-cursor")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".bean-cursor")).toHaveCSS("opacity", "0.25");
   await expect(page.locator(".midnight-cup canvas")).toBeVisible();
   await page.waitForTimeout(3000);
   await page.screenshot({ path: "docs/midnight-desktop.png" });
@@ -36,7 +36,7 @@ test("smooth scrolling, cursor, horizontal journey and dialog scroll lock", asyn
   }
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
   await page.waitForTimeout(800);
-  await page.getByRole("button", { name: "Contact Us", exact: true }).click();
+  await page.getByRole("button", { name: "Reserve a table", exact: true }).click();
   const before = await page.evaluate(() => scrollY);
   await page.mouse.move(30, 200);
   await page.mouse.wheel(0, 800);
