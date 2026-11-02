@@ -1452,6 +1452,84 @@ select {
   padding: 0;
   margin: 4px 0 0;
 }
+.availability-calendar {
+  min-width: 0;
+  margin: 4px 0 0;
+  padding: 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+.availability-calendar legend {
+  padding: 0 8px;
+  color: #e2c2a8;
+  font-size: 14px;
+}
+.calendar-toolbar {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+.calendar-toolbar button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 50%;
+  background: transparent;
+  color: white;
+}
+.calendar-toolbar button:disabled,
+.calendar-grid button:disabled {
+  cursor: not-allowed;
+  opacity: 0.32;
+}
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 5px;
+}
+.calendar-weekdays {
+  margin-bottom: 6px;
+  color: var(--color-muted);
+  text-align: center;
+  font-size: 10px;
+  text-transform: uppercase;
+}
+.calendar-grid button {
+  min-width: 0;
+  min-height: 52px;
+  padding: 6px 2px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: #ffffff05;
+  color: white;
+}
+.calendar-grid button:not(:disabled):hover,
+.calendar-grid button.is-selected {
+  border-color: var(--color-accent);
+  background: #b9927220;
+}
+.calendar-grid button span,
+.calendar-grid button small {
+  display: block;
+}
+.calendar-grid button small {
+  margin-top: 3px;
+  overflow: hidden;
+  color: #a9c4ad;
+  font-size: 8px;
+  text-overflow: ellipsis;
+}
+.calendar-key {
+  margin: 12px 0 0 !important;
+  font-size: 12px;
+}
 .reservation-times legend {
   display: flex;
   flex-wrap: wrap;
@@ -1553,6 +1631,24 @@ select {
   color: white;
   padding: 12px;
   font: inherit;
+}
+.booking-form .privacy-consent {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  align-items: start;
+  gap: 10px;
+  padding: 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+.booking-form .privacy-consent input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  padding: 0;
+  accent-color: var(--color-accent);
 }
 .button:disabled {
   opacity: 0.5;

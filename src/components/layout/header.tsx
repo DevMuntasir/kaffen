@@ -1,6 +1,16 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Bean, Menu, X, Instagram, Facebook, Twitter, Youtube } from "lucide-react";
+import {
+  ArrowUpRight,
+  Bean,
+  Menu,
+  X,
+  Instagram,
+  Facebook,
+  Twitter,
+  Youtube,
+  UserRound,
+} from "lucide-react";
 import { site } from "@/data/site";
 import styles from "./header.module.css";
 
@@ -12,7 +22,7 @@ const links = [
   { label: "Gallery", href: "#gallery" },
   // { label: "Journal", href: "#news" },
   { label: "Reservations", href: "#booking" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function SocialLinks() {
@@ -101,6 +111,10 @@ export function Header({ onBook }: { onBook: () => void }) {
           </div>
         </nav>
         <div className={styles.actions}>
+          <a className={styles.account} href="/account" aria-label="Customer account">
+            <UserRound size={17} strokeWidth={1.5} aria-hidden="true" />
+            <span>Account</span>
+          </a>
           <button
             className={styles.reserve}
             onClick={() => {
@@ -108,7 +122,7 @@ export function Header({ onBook }: { onBook: () => void }) {
               onBook();
             }}
           >
-          Reserve a table
+            Reserve a table
             <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
           </button>
           <button

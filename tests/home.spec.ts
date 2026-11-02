@@ -12,16 +12,26 @@ test("desktop homepage images, navigation and booking flow", async ({ page }) =>
   await expect(dialog).toBeVisible();
   const date = new Date();
   date.setDate(date.getDate() + 7);
-  await dialog.getByLabel("Date", { exact: true }).fill(date.toISOString().slice(0, 10));
+  const dateLabel = new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date.toISOString().slice(0, 10)}T12:00:00Z`));
+  await dialog.getByRole("button", { name: new RegExp(`^Select ${dateLabel}`) }).click();
   await dialog.getByLabel("Party size").selectOption("3");
   await dialog.getByRole("radio", { name: "10:00 AM", exact: true }).check();
   await dialog.getByRole("button", { name: "Continue to your details" }).click();
-  await dialog.getByLabel("Your name").fill("Test Visitor");
+  await dialog.getByLabel("Point of contact / host").fill("Test Visitor");
+  await dialog.getByLabel("Profession").fill("Designer");
   await dialog.getByLabel("Email address").fill("visitor@example.com");
   await dialog.getByLabel("Phone number").fill("01234567890");
+  await dialog.getByLabel("Food and beverage choices").fill("Coffee and pastries");
   await dialog.getByLabel(/Special requests/).fill("A quiet table, please.");
+  await dialog.getByLabel(/I have read and agree to the privacy statement/).check();
   await dialog.getByRole("button", { name: "Confirm reservation" }).click();
-  await expect(dialog.getByRole("heading")).toHaveText("Your table is reserved");
+  await expect(dialog.getByRole("heading")).toHaveText("Your Adda Meeting is reserved");
   await expect(dialog.getByRole("status")).toContainText("3 guests");
   await expect(dialog.locator(".reservation-reference")).toHaveText(/^KF-[A-F0-9]{8}$/);
   await page.keyboard.press("Escape");

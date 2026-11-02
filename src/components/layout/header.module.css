@@ -97,6 +97,19 @@
   gap: 16px;
   flex-shrink: 0;
 }
+.account {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c6c1ba;
+  font: 500 9px/1 var(--font-experience);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: color 0.3s;
+}
+.account:hover {
+  color: var(--color-gold);
+}
 .reserve {
   display: inline-flex;
   align-items: center;
@@ -258,6 +271,9 @@
   }
   .actions {
     gap: 9px;
+  }
+  .account span {
+    display: none;
   }
   .reserve {
     min-height: 40px;

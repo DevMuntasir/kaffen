@@ -6,15 +6,31 @@ function futureDate(days: number) {
   date.setUTCDate(date.getUTCDate() + days);
   return date.toISOString().slice(0, 10);
 }
+function calendarDateLabel(date: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${date}T12:00:00Z`));
+}
 const details = () => ({
   requestId: randomUUID(),
   date: futureDate(60),
   time: "12:00",
   guests: 8,
+  duration: 90,
   name: "Reservation Test",
+  profession: "Event coordinator",
   email: "test@example.com",
   phone: "+1 212 555 0101",
   notes: "",
+  gatheringType: "Adda",
+  gatheringOther: "",
+  depositMethod: "Web",
+  foodAndBeverage: "Coffee and pastries",
+  privacyAccepted: true,
 });
 
 test("validates reservation input and rejects past dates", async ({ request }) => {
@@ -72,14 +88,17 @@ test("mobile reservation flow supports changing details without losing contact i
   await page.getByRole("button", { name: "Reserve a table", exact: true }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("button", { name: "Continue to your details" })).toBeDisabled();
-  await dialog.getByLabel("Date", { exact: true }).fill(futureDate(10));
+  const meetingDate = futureDate(10);
+  await dialog
+    .getByRole("button", { name: new RegExp(`^Select ${calendarDateLabel(meetingDate)}`) })
+    .click();
   await dialog.getByRole("radio", { name: "9:00 AM", exact: true }).check();
   await dialog.getByRole("button", { name: "Continue to your details" }).click();
-  await dialog.getByLabel("Your name").fill("Mobile Guest");
+  await dialog.getByLabel("Point of contact / host").fill("Mobile Guest");
   await dialog.getByRole("button", { name: "Change", exact: true }).click();
   await dialog.getByRole("radio", { name: "10:00 AM", exact: true }).check();
   await dialog.getByRole("button", { name: "Continue to your details" }).click();
-  await expect(dialog.getByLabel("Your name")).toHaveValue("Mobile Guest");
+  await expect(dialog.getByLabel("Point of contact / host")).toHaveValue("Mobile Guest");
   await expect(dialog.locator(".reservation-summary")).toContainText("10:00 AM");
   expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
   await dialog.screenshot({ path: test.info().outputPath("reservation-mobile.png") });
