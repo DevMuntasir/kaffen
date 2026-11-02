@@ -11,6 +11,7 @@ const links = [
   { label: "The craft", href: "#journey" },
   { label: "Gallery", href: "#gallery" },
   // { label: "Journal", href: "#news" },
+  { label: "Reservations", href: "#booking" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -107,7 +108,7 @@ export function Header({ onBook }: { onBook: () => void }) {
               onBook();
             }}
           >
-            Contact Us
+          Reserve a table
             <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden="true" />
           </button>
           <button
