@@ -3,6 +3,7 @@ import {
   futureSlot,
   reservationPolicy,
   reservationTimes,
+  validReservationDuration,
   validReservationDate,
 } from "@/lib/reservation";
 import { createReservation, readReservations, remainingSeats } from "@/lib/reservation-store";
@@ -14,19 +15,44 @@ const reply = (body: unknown, status = 200) =>
 
 export async function GET(request: NextRequest) {
   const date = request.nextUrl.searchParams.get("date") || "";
+  const month = request.nextUrl.searchParams.get("month") || "";
   const guests = Number(request.nextUrl.searchParams.get("guests"));
+  const duration = Number(
+    request.nextUrl.searchParams.get("duration") || reservationPolicy.duration
+  );
   if (
-    !validReservationDate(date) ||
     !Number.isInteger(guests) ||
     guests < 1 ||
-    guests > reservationPolicy.maxGuests
+    guests > reservationPolicy.maxGuests ||
+    !validReservationDuration(duration)
   )
-    return reply({ error: "Choose a date within the next 90 days and 1–8 guests." }, 400);
+    return reply({ error: "Choose a valid booking length and 1–8 guests." }, 400);
   try {
     const records = await readReservations();
+    if (month) {
+      if (!/^\d{4}-\d{2}$/.test(month))
+        return reply({ error: "Choose a valid calendar month." }, 400);
+      const first = new Date(`${month}-01T12:00:00Z`);
+      if (Number.isNaN(first.getTime()) || first.toISOString().slice(0, 7) !== month)
+        return reply({ error: "Choose a valid calendar month." }, 400);
+      const availability: Record<string, number> = {};
+      while (first.toISOString().slice(0, 7) === month) {
+        const day = first.toISOString().slice(0, 10);
+        if (validReservationDate(day)) {
+          availability[day] = reservationTimes.filter(
+            (time) =>
+              futureSlot(day, time) && remainingSeats(records, day, time, duration) >= guests
+          ).length;
+        }
+        first.setUTCDate(first.getUTCDate() + 1);
+      }
+      return reply({ availability });
+    }
+    if (!validReservationDate(date))
+      return reply({ error: "Choose a date within the next 90 days." }, 400);
     return reply({
       times: reservationTimes.filter(
-        (time) => futureSlot(date, time) && remainingSeats(records, date, time) >= guests
+        (time) => futureSlot(date, time) && remainingSeats(records, date, time, duration) >= guests
       ),
     });
   } catch {
@@ -51,29 +77,47 @@ export async function POST(request: NextRequest) {
   const date = text("date"),
     time = text("time"),
     name = text("name"),
+    profession = text("profession"),
     email = text("email"),
     phone = text("phone"),
     notes = text("notes"),
+    gatheringType = text("gatheringType"),
+    gatheringOther = text("gatheringOther"),
+    depositMethod = text("depositMethod"),
+    foodAndBeverage = text("foodAndBeverage"),
     requestId = text("requestId");
   const guests = body.guests;
+  const duration = body.duration;
+  const privacyAccepted = body.privacyAccepted;
   if (!futureSlot(date, time))
     return reply({ error: "Choose an upcoming time within the next 90 days." }, 400);
   if (!Number.isInteger(guests) || guests < 1 || guests > reservationPolicy.maxGuests)
     return reply({ error: "Reservations are available for 1–8 guests." }, 400);
+  if (!validReservationDuration(duration))
+    return reply({ error: "Choose a valid booking length." }, 400);
+  const gatheringTypes = ["Professional meeting", "Adda", "Special social event", "Other"];
   if (
     name.length < 2 ||
     name.length > 80 ||
+    profession.length < 2 ||
+    profession.length > 100 ||
     !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     email.length > 254 ||
     !/^[+\d\s().-]{7,30}$/.test(phone) ||
     phone.replace(/\D/g, "").length < 7 ||
     notes.length > 500 ||
+    !gatheringTypes.includes(gatheringType) ||
+    (gatheringType === "Other" && (gatheringOther.length < 2 || gatheringOther.length > 200)) ||
+    (gatheringType !== "Other" && gatheringOther.length > 0) ||
+    !["In person", "Web"].includes(depositMethod) ||
+    foodAndBeverage.length < 2 ||
+    foodAndBeverage.length > 1000 ||
+    privacyAccepted !== true ||
     !/^[0-9a-f-]{36}$/i.test(requestId)
   )
     return reply(
       {
-        error:
-          "Please provide a valid name, email and phone number. Notes must be under 500 characters.",
+        error: "Please complete the host, gathering, deposit, and food and beverage details.",
       },
       400
     );
@@ -82,10 +126,17 @@ export async function POST(request: NextRequest) {
       date,
       time,
       guests,
+      duration,
       name,
+      profession,
       email,
       phone,
       notes,
+      gatheringType,
+      gatheringOther,
+      depositMethod,
+      foodAndBeverage,
+      privacyAccepted,
       requestId,
     });
     if (!record)
@@ -97,6 +148,7 @@ export async function POST(request: NextRequest) {
           date: record.date,
           time: record.time,
           guests: record.guests,
+          duration: record.duration,
           name: record.name,
         },
       },

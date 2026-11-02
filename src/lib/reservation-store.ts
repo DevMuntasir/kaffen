@@ -9,10 +9,17 @@ export type Reservation = {
   date: string;
   time: string;
   guests: number;
+  duration: number;
   name: string;
+  profession: string;
   email: string;
   phone: string;
   notes: string;
+  gatheringType: string;
+  gatheringOther: string;
+  depositMethod: string;
+  foodAndBeverage: string;
+  privacyAccepted: boolean;
   createdAt: string;
 };
 
@@ -31,18 +38,23 @@ export async function readReservations(): Promise<Reservation[]> {
   }
 }
 
-export function remainingSeats(records: Reservation[], date: string, time: string) {
+export function remainingSeats(
+  records: Reservation[],
+  date: string,
+  time: string,
+  duration = reservationPolicy.duration
+) {
   const minutes = (value: string) => Number(value.slice(0, 2)) * 60 + Number(value.slice(3));
   const start = minutes(time);
   // Check peak occupancy at each half-hour of the requested sitting.
   let peak = 0;
-  for (let at = start; at < start + reservationPolicy.duration; at += 30) {
+  for (let at = start; at < start + duration; at += 30) {
     const occupied = records
       .filter(
         (r) =>
           r.date === date &&
           minutes(r.time) <= at &&
-          minutes(r.time) + reservationPolicy.duration > at
+          minutes(r.time) + (r.duration || reservationPolicy.duration) > at
       )
       .reduce((sum, r) => sum + r.guests, 0);
     peak = Math.max(peak, occupied);
@@ -55,7 +67,7 @@ export function createReservation(input: Omit<Reservation, "reference" | "create
     const records = await readReservations();
     const previous = records.find((r) => r.requestId === input.requestId);
     if (previous) return previous;
-    if (remainingSeats(records, input.date, input.time) < input.guests) return null;
+    if (remainingSeats(records, input.date, input.time, input.duration) < input.guests) return null;
     const record: Reservation = {
       ...input,
       reference: `KF-${randomUUID().slice(0, 8).toUpperCase()}`,

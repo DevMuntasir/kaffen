@@ -40,7 +40,7 @@ Change brand colors and fonts in `tokens.css`, copy/menu/prices in `site.ts`, an
 - Desktop dropdown navigation and mobile toggle navigation.
 - Horizontal gallery with scroll controls and native dialog image preview.
 - Review pagination, article previews and all-articles status.
-- Two-step table reservations with live availability, guest details, special requests and a saved booking reference.
+- Two-step Adda Meeting reservations with duration-aware live availability, gathering and host details, deposit preference, food and beverage choices, and a saved booking reference.
 - Server-side validation, duplicate-submit protection and capacity checks across overlapping 90-minute sittings.
 - Anchor navigation, keyboard focus states, skip link, dialog focus trapping and Escape dismissal.
 
@@ -68,8 +68,8 @@ See [docs/MOTION.md](docs/MOTION.md) for the investigated reference, architectur
 
 ## Reservations
 
-The header and reservation section open a two-step booking dialog. Guests select a date within the next 90 days, 1–8 people and an available half-hour slot, then provide their name, email, phone and optional requests. The server returns a reservation reference only after saving the record. No automatic emails are sent.
+The header and reservation section open a two-step Adda Meeting dialog. Guests select a date within the next 90 days, 1–8 people, a 1–3 hour booking length, and an available half-hour slot. They then provide the gathering type, deposit method, host contact details, food and beverage choices, and optional requests. The server returns a reservation reference only after saving the record. No automatic emails are sent.
 
-`GET /api/reservations?date=YYYY-MM-DD&guests=2` returns available times. `POST /api/reservations` validates and saves a booking; unavailable times return HTTP 409. Each sitting lasts 90 minutes, with 24 shared seats and starts from 08:00 to 19:30. Policy is centralized in `src/lib/reservation.ts`. Times use `America/New_York`, matching the existing restaurant address; replace the reference contact details and timezone with your restaurant's real details.
+`GET /api/reservations?date=YYYY-MM-DD&guests=2&duration=90` returns available times. `POST /api/reservations` validates and saves a booking; unavailable times return HTTP 409. Booking lengths are 60, 90, 120, or 180 minutes, with 24 shared seats and starts from 08:00 to 19:30. Policy is centralized in `src/lib/reservation.ts`. Times use `America/New_York`, matching the existing restaurant address; replace the reference contact details and timezone with your restaurant's real details.
 
 Records (including contact details) are saved server-side in `.data/reservations.json`, excluded from Git. Set `RESERVATION_DATA_DIR` to a private, persistent writable directory. Atomic writes and an in-process queue protect reservations in a **single Node.js process**. For multiple processes, serverless hosts, or multiple replicas, replace the file store with a shared transactional database before deployment. Back up the data directory and restrict its access.
