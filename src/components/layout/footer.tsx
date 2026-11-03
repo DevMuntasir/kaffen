@@ -7,8 +7,8 @@ export function Footer() {
     <footer id="contact" className="footer">
       <div className="container footer-grid">
         <div>
-          <a href="#home" aria-label="Kaffen home">
-            <Photo file="logo.png" alt="Kaffen" className="brand" width={118} height={80} />
+          <a href="#home" aria-label="Brew & Sip home">
+            <Photo file="logo.png" alt="Brew & Sip" className="brand" width={118} height={80} />
           </a>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit ut elit tellus, luctus nec.</p>
           <SocialLinks />
@@ -65,7 +65,7 @@ export function Footer() {
         </div>
       </div>
       <div className="container copyright">
-        Copyright © 2026 Kaffen | Design by{" "}
+        Copyright © 2026 Brew & Sip | Design by{" "}
     
       </div>
     </footer>

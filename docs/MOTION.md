@@ -1,6 +1,6 @@
 # Midnight motion system
 
-Reference investigated: https://obsidianbrew.vercel.app/ on 2026-10-29. The live page and its public JS/CSS were inspected, including rendered desktop screenshots. The original Kaffen content and section architecture are retained; the hero is replaced and a coffee journey is inserted after the menu.
+Reference investigated: https://obsidianbrew.vercel.app/ on 2026-10-29. The live page and its public JS/CSS were inspected, including rendered desktop screenshots. The original Brew & Sip content and section architecture are retained; the hero is replaced and a coffee journey is inserted after the menu.
 
 ## Reference behavior and implementation
 

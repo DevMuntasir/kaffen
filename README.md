@@ -1,6 +1,6 @@
-# Kaffen Coffee House — Next.js
+# Brew & Sip Coffee House — Next.js
 
-A component-based Kaffen **Coffee House homepage**, enhanced with the Obsidian Brew / Midnight Roast motion experience, using Next.js App Router, React and TypeScript. The reference is https://kaffen.bslthemes.com/ (the destination of the supplied ThemeForest preview).
+A component-based Brew & Sip **Coffee House homepage**, enhanced with the Obsidian Brew / Midnight Roast motion experience, using Next.js App Router, React and TypeScript. The reference is https://kaffen.bslthemes.com/ (the destination of the supplied ThemeForest preview).
 
 ## Run locally
 
