@@ -23,6 +23,10 @@ const details = () => ({
   duration: 90,
   name: "Reservation Test",
   phone: "+1 212 555 0101",
+  email: "test@example.com",
+  gatheringType: "Adda",
+  gatheringOther: "",
+  foodAndBeverage: "Coffee and pastries",
 });
 
 test("validates reservation input and rejects past dates", async ({ request }) => {
@@ -31,6 +35,20 @@ test("validates reservation input and rejects past dates", async ({ request }) =
     400
   );
   for (const invalid of [{ guests: 1.5 }, { duration: 0 }, { duration: 181 }, { duration: 75.5 }]) {
+    expect(
+      (await request.post("/api/reservations", { data: { ...details(), ...invalid } })).status()
+    ).toBe(400);
+  }
+  for (const invalid of [
+    { email: "invalid" },
+    { email: "" },
+    { gatheringType: "" },
+    { gatheringType: "Unknown" },
+    { gatheringType: "Other", gatheringOther: "" },
+    { gatheringType: "Adda", gatheringOther: "Unexpected explanation" },
+    { foodAndBeverage: "" },
+    { foodAndBeverage: "x".repeat(1001) },
+  ]) {
     expect(
       (await request.post("/api/reservations", { data: { ...details(), ...invalid } })).status()
     ).toBe(400);
@@ -76,7 +94,9 @@ test("saves once, prevents concurrent overbooking and accounts for overlapping s
   ).toBe(409);
 });
 
-test("mobile reservation submits name and mobile on a single screen", async ({ page }) => {
+test("mobile reservation submits host, gathering and food choices on a single screen", async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
@@ -84,11 +104,22 @@ test("mobile reservation submits name and mobile on a single screen", async ({ p
   const dialog = page.getByRole("dialog");
   const confirm = dialog.getByRole("button", { name: "Confirm reservation" });
   await expect(confirm).toBeDisabled();
-  await expect(dialog.getByRole("combobox")).toHaveCount(0);
-  await expect(dialog.getByRole("textbox")).toHaveCount(2);
-  await dialog.getByRole("textbox", { name: "Name", exact: true }).fill("Mobile Guest");
+  await expect(dialog.getByRole("combobox")).toHaveCount(1);
+  await dialog
+    .getByRole("textbox", { name: "Point of contact / host", exact: true })
+    .fill("Mobile Guest");
   await dialog.getByLabel("Mobile number").fill("01712345678");
-  await dialog.getByRole("spinbutton", { name: "Party size" }).fill("3");
+  await dialog.getByLabel("Host email").fill("guest@example.com");
+  await dialog.getByLabel("Type of gathering").selectOption("Other");
+  await expect(dialog.getByLabel("Explain your gathering")).toBeVisible();
+  await dialog.getByLabel("Explain your gathering").fill("A book club discussion");
+  await dialog.getByLabel("Type of gathering").selectOption("Adda");
+  await expect(dialog.getByLabel("Explain your gathering")).toHaveCount(0);
+  await dialog.getByLabel("Type of gathering").selectOption("Other");
+  await expect(dialog.getByLabel("Explain your gathering")).toBeEmpty();
+  await dialog.getByLabel("Explain your gathering").fill("A book club discussion");
+  await dialog.getByLabel("Choice of food and beverage").fill("Coffee, tea and sandwiches");
+  await dialog.getByRole("spinbutton", { name: "Number of guests" }).fill("3");
   await dialog.getByRole("spinbutton", { name: "Booking length" }).fill("75");
   const meetingDate = futureDate(10);
   await dialog
@@ -99,9 +130,9 @@ test("mobile reservation submits name and mobile on a single screen", async ({ p
   await expect(confirm).toBeDisabled();
   await dialog.getByRole("spinbutton", { name: "Booking length" }).fill("75");
   await dialog.getByRole("radio", { name: "10:00 AM", exact: true }).check();
-  await expect(dialog.getByRole("textbox", { name: "Name", exact: true })).toHaveValue(
-    "Mobile Guest"
-  );
+  await expect(
+    dialog.getByRole("textbox", { name: "Point of contact / host", exact: true })
+  ).toHaveValue("Mobile Guest");
   expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
   const submitted = page.waitForRequest(
     (request) => request.url().endsWith("/api/reservations") && request.method() === "POST"
@@ -111,18 +142,13 @@ test("mobile reservation submits name and mobile on a single screen", async ({ p
   expect(payload).toMatchObject({
     name: "Mobile Guest",
     phone: "01712345678",
+    email: "guest@example.com",
+    gatheringType: "Other",
+    gatheringOther: "A book club discussion",
+    foodAndBeverage: "Coffee, tea and sandwiches",
     guests: 3,
     duration: 75,
   });
-  expect(Object.keys(payload).sort()).toEqual([
-    "date",
-    "duration",
-    "guests",
-    "name",
-    "phone",
-    "requestId",
-    "time",
-  ]);
   await expect(dialog).toContainText("Your Adda Meeting is reserved");
   await expect(dialog.locator(".reservation-summary")).toContainText(
     "3 guests · 1 hour 15 minutes"

@@ -1519,7 +1519,7 @@ Response `200`:
 Request:
 
 ```json
-{"requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00"}
+{"requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}
 ```
 
 Response `201`:
@@ -1535,7 +1535,7 @@ Request: body নেই।
 Response `200`:
 
 ```json
-{"success": true, "data": [{"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z"}], "meta": {"page": 1, "limit": 20, "total": 1, "totalPages": 1}}
+{"success": true, "data": [{"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}], "meta": {"page": 1, "limit": 20, "total": 1, "totalPages": 1}}
 ```
 
 ## 121. GET `/admin/reservations/stats?dateFrom=2026-11-01&dateTo=2026-11-30`
@@ -1559,7 +1559,7 @@ Body নেই। Query/path parameter URL-এ দেওয়া আছে।
 Response `200`:
 
 ```json
-{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z"}}
+{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}}
 ```
 
 ## 123. POST `/admin/reservations`
@@ -1567,13 +1567,13 @@ Response `200`:
 Request:
 
 ```json
-{"requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "status": "booked", "notes": ""}
+{"requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "status": "booked", "notes": "", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}
 ```
 
 Response `201`:
 
 ```json
-{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "admin", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z"}}
+{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "admin", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}}
 ```
 
 ## 124. PATCH `/admin/reservations/reservation-101`
@@ -1587,7 +1587,7 @@ Request:
 Response `200`:
 
 ```json
-{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 3, "duration": 90, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z"}}
+{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 3, "duration": 90, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "booked", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}}
 ```
 
 ## 125. PATCH `/admin/reservations/reservation-101/status`
@@ -1601,7 +1601,7 @@ Request:
 Response `200`:
 
 ```json
-{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "cancelled", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z"}}
+{"success": true, "data": {"id": "reservation-101", "reference": "KF-A1B2C3D4", "requestId": "b6a845b2-6719-4ab4-9dc2-2e9932d0b3a8", "name": "Rahim Ahmed", "phone": "01712345678", "guests": 4, "duration": 75, "date": "2026-11-10", "time": "12:00", "timeZone": "America/New_York", "status": "cancelled", "notes": "", "source": "website", "createdAt": "2026-11-03T10:00:00.000Z", "updatedAt": "2026-11-03T10:00:00.000Z", "email": "rahim@example.com", "gatheringType": "Adda", "gatheringOther": "", "foodAndBeverage": "Coffee and pastries"}}
 ```
 
 ## 126. DELETE `/admin/reservations/reservation-101`
@@ -1625,3 +1625,5 @@ Body নেই।
 HTTP status: `400` invalid request, `401` login required, `403` forbidden, `404` not found, `409` revision/capacity conflict, `422` validation error, `503` service unavailable.
 
 `expectedRevision` আগের GET response থেকে নিতে হবে। PUT সম্পূর্ণ section save করে; PATCH শুধু পাঠানো field বদলায়। Save draft-এর পর publish করলে website-এ live হবে।
+
+Reservation fields: `email`, `gatheringType`, `foodAndBeverage` required. `gatheringOther` required only when `gatheringType` is `Other`; otherwise send an empty string. Gathering types: `Professional meeting`, `Adda`, `Special social event`, `Other`.

@@ -11,7 +11,11 @@ export type Reservation = {
   guests: number;
   duration: number;
   name: string;
+  email: string;
   phone: string;
+  gatheringType: string;
+  gatheringOther: string;
+  foodAndBeverage: string;
   createdAt: string;
 };
 

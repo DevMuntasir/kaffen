@@ -1,3 +1,10 @@
+export const reservationGatheringTypes = [
+  "Professional meeting",
+  "Adda",
+  "Special social event",
+  "Other",
+] as const;
+
 export const reservationPolicy = {
   timeZone: "America/New_York",
   timeZoneLabel: "New York time",

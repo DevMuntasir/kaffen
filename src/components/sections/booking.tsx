@@ -18,6 +18,7 @@ import {
   displayDuration,
   displayTime,
   latestReservationDate,
+  reservationGatheringTypes,
   reservationPolicy,
   restaurantNow,
   validReservationDuration,
@@ -70,7 +71,14 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
-  const [contact, setContact] = useState({ name: "", phone: "" });
+  const [contact, setContact] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    gatheringType: "",
+    gatheringOther: "",
+    foodAndBeverage: "",
+  });
   const validSelection =
     typeof guests === "number" &&
     Number.isInteger(guests) &&
@@ -219,7 +227,7 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
           <form className="booking-form" onSubmit={submit} aria-busy={saving}>
             <fieldset className="reservation-fields" disabled={saving}>
               <label>
-                Name
+                Point of contact / host
                 <input
                   name="name"
                   autoComplete="name"
@@ -245,8 +253,62 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
                   onChange={(event) => setContact({ ...contact, phone: event.target.value })}
                 />
               </label>
+              <label>
+                Host email
+                <input
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                  placeholder="you@example.com"
+                  value={contact.email}
+                  onChange={(event) => setContact({ ...contact, email: event.target.value })}
+                />
+              </label>
+              <label>
+                Type of gathering
+                <select
+                  name="gatheringType"
+                  required
+                  value={contact.gatheringType}
+                  onChange={(event) =>
+                    setContact({
+                      ...contact,
+                      gatheringType: event.target.value,
+                      gatheringOther: event.target.value === "Other" ? contact.gatheringOther : "",
+                    })
+                  }
+                >
+                  <option value="" disabled>
+                    Select a gathering type
+                  </option>
+                  {reservationGatheringTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {contact.gatheringType === "Other" && (
+                <label className="reservation-full">
+                  Explain your gathering
+                  <textarea
+                    name="gatheringOther"
+                    required
+                    rows={3}
+                    minLength={2}
+                    maxLength={200}
+                    placeholder="Tell us about your gathering"
+                    value={contact.gatheringOther}
+                    onChange={(event) =>
+                      setContact({ ...contact, gatheringOther: event.target.value })
+                    }
+                  />
+                </label>
+              )}
               <label htmlFor="booking-guests">
-                Party size
+                Number of guests
                 <input
                   type="number"
                   required
@@ -277,6 +339,21 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
                     setTime("");
                     setDuration(event.target.value === "" ? "" : Number(event.target.value));
                   }}
+                />
+              </label>
+              <label className="reservation-full">
+                Choice of food and beverage
+                <textarea
+                  name="foodAndBeverage"
+                  required
+                  rows={3}
+                  minLength={2}
+                  maxLength={1000}
+                  placeholder="Describe the food and beverage options you would like"
+                  value={contact.foodAndBeverage}
+                  onChange={(event) =>
+                    setContact({ ...contact, foodAndBeverage: event.target.value })
+                  }
                 />
               </label>
               <AvailabilityCalendar
