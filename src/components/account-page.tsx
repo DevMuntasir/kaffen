@@ -37,7 +37,7 @@ export function AccountPage() {
 
     window.setTimeout(() => {
       if (mode === "signup") {
-        localStorage.setItem("kaffen-customer", JSON.stringify({ name, email }));
+        localStorage.setItem("brewandsip-customer", JSON.stringify({ name, email }));
         setMessage(`Welcome to the house, ${name.split(" ")[0]}. Your account is ready.`);
       } else {
         setMessage("Welcome back. Your coffee table is waiting.");
@@ -48,15 +48,15 @@ export function AccountPage() {
 
   return (
     <main className={styles.page}>
-      <section className={styles.story} aria-label="Kaffen customer membership">
-        <img src="/images/midnight-hero.webp" alt="A handcrafted coffee at Kaffen" />
+      <section className={styles.story} aria-label="Brew & Sip customer membership">
+        <img src="/images/midnight-hero.webp" alt="A handcrafted coffee at Brew & Sip" />
         <div className={styles.storyShade} />
-        <a href="/" className={styles.brand} aria-label="Kaffen home">
+        <a href="/" className={styles.brand} aria-label="Brew & Sip home">
           <span className={styles.emblem}>
             <Bean size={25} strokeWidth={1.25} />
           </span>
           <span>
-            Kaffen<small>Coffee & conversation</small>
+            Brew & Sip<small>Coffee & conversation</small>
           </span>
         </a>
         <div className={styles.storyCopy}>
@@ -69,15 +69,15 @@ export function AccountPage() {
     
      
         </div>
-        <span className={styles.storyNote}>Kaffen Coffee House · Est. 2009</span>
+        <span className={styles.storyNote}>Brew & Sip Coffee House · Est. 2009</span>
       </section>
 
       <section className={styles.account}>
         <div className={styles.mobileTop}>
           <a href="/" className={styles.mobileBrand}>
-            <Bean size={20} /> Kaffen
+            <Bean size={20} /> Brew & Sip
           </a>
-          <a href="/" aria-label="Back to Kaffen">
+          <a href="/" aria-label="Back to Brew & Sip">
             <ArrowLeft size={20} />
           </a>
         </div>
@@ -121,7 +121,7 @@ export function AccountPage() {
                 <p>{message}</p>
               </div>
               <a href="/">
-                Return to Kaffen <ArrowRight size={15} />
+                Return to Brew & Sip <ArrowRight size={15} />
               </a>
             </div>
           ) : (
@@ -202,7 +202,7 @@ export function AccountPage() {
 
           {!message && (
             <p className={styles.switch}>
-              {mode === "login" ? "New to Kaffen?" : "Already a member?"}{" "}
+              {mode === "login" ? "New to Brew & Sip?" : "Already a member?"}{" "}
               <button
                 type="button"
                 onClick={() => switchMode(mode === "login" ? "signup" : "login")}
@@ -213,7 +213,7 @@ export function AccountPage() {
           )}
         </div>
         <p className={styles.support}>
-          Need a hand? <a href="mailto:hello@kaffen.com">hello@kaffen.com</a>
+          Need a hand? <a href="mailto:hello@brewandsip.com">hello@brewandsip.com</a>
         </p>
       </section>
     </main>

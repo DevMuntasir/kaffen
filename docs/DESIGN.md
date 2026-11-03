@@ -1,6 +1,6 @@
-# Kaffen design system
+# Brew & Sip design system
 
-The original Coffee House reference remains the source for existing Kaffen sections. The hero and new horizontal journey follow Obsidian Brew / Midnight Roast; see `MOTION.md`. Preserve its section order, dark palette, photographic emphasis and tall condensed typography.
+The original Coffee House reference remains the source for existing Brew & Sip sections. The hero and new horizontal journey follow Obsidian Brew / Midnight Roast; see `MOTION.md`. Preserve its section order, dark palette, photographic emphasis and tall condensed typography.
 
 - **Tokens:** `src/styles/tokens.css` owns semantic colors, font families, width, spacing, radius and transition duration.
 - **Typography:** Oswald 400 for section headings (42px desktop / 32px mobile), Oswald 500 for hero (120px desktop), Roboto 16px body, uppercase bronze 16px eyebrows, Merienda 24px prices.

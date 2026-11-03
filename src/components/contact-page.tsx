@@ -21,12 +21,12 @@ export function ContactPage() {
   return (
     <main className={styles.page}>
       <header className={styles.header}>
-        <a href="/" className={styles.brand} aria-label="Kaffen home">
+        <a href="/" className={styles.brand} aria-label="Brew & Sip home">
           <span className={styles.emblem}>
             <Bean size={23} strokeWidth={1.25} />
           </span>
           <span>
-            Kaffen<small>Coffee & conversation</small>
+            Brew & Sip<small>Coffee & conversation</small>
           </span>
         </a>
         <a href="/" className={styles.back}>
@@ -85,7 +85,7 @@ export function ContactPage() {
                 <Check size={25} />
               </span>
               <h2>Your note is on its way.</h2>
-              <p>Thanks for reaching out. Someone from the Kaffen team will be in touch soon.</p>
+              <p>Thanks for reaching out. Someone from the Brew & Sip team will be in touch soon.</p>
               <button type="button" onClick={() => setSent(false)}>
                 Send another message
               </button>
@@ -139,7 +139,7 @@ export function ContactPage() {
               </label>
               <label className={styles.consent}>
                 <input type="checkbox" required />
-                <span>I agree that Kaffen may use these details to reply to my enquiry.</span>
+                  <span>I agree that Brew & Sip may use these details to reply to my enquiry.</span>
               </label>
               <button className={styles.submit} type="submit" disabled={busy}>
                 {busy ? "Sending…" : "Send message"}
@@ -151,7 +151,7 @@ export function ContactPage() {
 
         <aside className={styles.visit}>
           <div className={styles.photo}>
-            <img src="/images/started_img_n5.jpg" alt="Warm seating inside Kaffen Coffee House" />
+            <img src="/images/started_img_n5.jpg" alt="Warm seating inside Brew & Sip Coffee House" />
             <span>
               <MapPin size={14} /> {site.address}
             </span>
@@ -181,7 +181,7 @@ export function ContactPage() {
       </section>
 
       <footer className={styles.footer}>
-        <span>Kaffen Coffee House · Est. 2009</span>
+        <span>Brew & Sip Coffee House · Est. 2009</span>
         <span>Slow moments. Exceptional coffee.</span>
       </footer>
     </main>

@@ -1,8 +1,8 @@
 export const site = {
-  name: "Kaffen",
+  name: "Brew & Sip",
   address: "55 Main Street, New York",
   phone: "+012 (345) 678 99",
-  email: "info@kaffen.com",
+  email: "info@brewandsip.com",
   hours: "08:00 am - 09:00 pm",
 };
 export const slides = [

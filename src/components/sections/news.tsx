@@ -51,7 +51,7 @@ export function News() {
           <Photo file={articles[selected].image} alt="Coffee house" />
           <p className="eyebrow">March 26, 2022 · Demo article</p>
           <p>
-            This article card is reproduced from the Kaffen homepage. Full article content can be
+            This article card is reproduced from the Brew & Sip homepage. Full article content can be
             connected through your CMS.
           </p>
         </Modal>

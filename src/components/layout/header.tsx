@@ -77,14 +77,14 @@ export function Header({ onBook }: { onBook: () => void }) {
         <a
           href="#home"
           className={styles.brand}
-          aria-label="Kaffen home"
+          aria-label="Brew & Sip home"
           onClick={() => setOpen(false)}
         >
           <span className={styles.emblem}>
             <Bean size={24} strokeWidth={1.25} aria-hidden="true" />
           </span>
           <span className={styles.wordmark}>
-            Kaffen<span className={styles.brandNote}>Coffee & conversation</span>
+            Brew & Sip<span className={styles.brandNote}>Coffee & conversation</span>
           </span>
         </a>
         <nav
@@ -93,7 +93,7 @@ export function Header({ onBook }: { onBook: () => void }) {
           aria-label="Main navigation"
           className={`${styles.navigation} ${open ? styles.open : ""}`}
         >
-          <span className={styles.mobileEyebrow}>Discover Kaffen</span>
+          <span className={styles.mobileEyebrow}>Discover Brew & Sip</span>
           <ul>
             {links.map((link, index) => (
               <li key={link.href}>
