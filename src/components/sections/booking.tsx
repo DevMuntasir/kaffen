@@ -216,9 +216,9 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
         </div>
       ) : (
         <>
-          <p className="reservation-intro">
+          {/* <p className="reservation-intro">
             Check space availability, choose your meeting length, and tell us how we can host you.
-          </p>
+          </p> */}
           {error && (
             <div className="reservation-error" role="alert">
               {error}
@@ -411,10 +411,10 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
                   Refresh availability
                 </button>
               )}
-              <p className="form-note">
+              {/* <p className="form-note">
                 Availability reflects your selected meeting length. For groups larger than 8,
                 contact {site.email}.
-              </p>
+              </p> */}
             </fieldset>
             <Button type="submit" disabled={!time || loading || saving || !validSelection}>
               {saving ? "Reserving your table…" : "Confirm reservation"}
