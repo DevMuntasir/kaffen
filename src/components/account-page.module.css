@@ -262,6 +262,7 @@
 .consent input {
   width: 16px;
   height: 16px;
+  flex-shrink: 0;
   accent-color: #9a6c44;
 }
 .consent {

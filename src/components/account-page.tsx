@@ -5,11 +5,14 @@ import {
   ArrowLeft,
   ArrowRight,
   Bean,
+  BriefcaseBusiness,
   Check,
   Eye,
   EyeOff,
   LockKeyhole,
   Mail,
+  MapPin,
+  Phone,
   UserRound,
 } from "lucide-react";
 import styles from "./account-page.module.css";
@@ -37,7 +40,17 @@ export function AccountPage() {
 
     window.setTimeout(() => {
       if (mode === "signup") {
-        localStorage.setItem("brewandsip-customer", JSON.stringify({ name, email }));
+        localStorage.setItem(
+          "brewandsip-customer",
+          JSON.stringify({
+            name,
+            email,
+            phone: String(data.get("phone") || "").trim(),
+            address: String(data.get("address") || "").trim(),
+            profession: String(data.get("profession") || "").trim(),
+            privacyAccepted: data.get("privacyAccepted") === "on",
+          })
+        );
         setMessage(`Welcome to the house, ${name.split(" ")[0]}. Your account is ready.`);
       } else {
         setMessage("Welcome back. Your coffee table is waiting.");
@@ -66,8 +79,6 @@ export function AccountPage() {
             <br />
             <em>Kept personal.</em>
           </h1>
-    
-     
         </div>
         <span className={styles.storyNote}>Brew & Sip Coffee House · Est. 2009</span>
       </section>
@@ -83,7 +94,6 @@ export function AccountPage() {
         </div>
         <div className={styles.formWrap}>
           <div className={styles.intro}>
-           
             <h2>{mode === "login" ? "Sign in to your account" : "Create your account"}</h2>
             <p>
               {mode === "login"
@@ -155,6 +165,53 @@ export function AccountPage() {
                   />
                 </div>
               </label>
+              {mode === "signup" && (
+                <>
+                  <label>
+                    <span>Phone number</span>
+                    <div className={styles.field}>
+                      <Phone size={18} />
+                      <input
+                        name="phone"
+                        type="tel"
+                        autoComplete="tel"
+                        placeholder="Your phone number"
+                        minLength={7}
+                        maxLength={30}
+                        required
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span>Address (optional)</span>
+                    <div className={styles.field}>
+                      <MapPin size={18} />
+                      <input
+                        name="address"
+                        type="text"
+                        autoComplete="street-address"
+                        placeholder="Your address"
+                        maxLength={300}
+                      />
+                    </div>
+                  </label>
+                  <label>
+                    <span>Profession</span>
+                    <div className={styles.field}>
+                      <BriefcaseBusiness size={18} />
+                      <input
+                        name="profession"
+                        type="text"
+                        autoComplete="organization-title"
+                        placeholder="Your profession or role"
+                        minLength={2}
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                  </label>
+                </>
+              )}
               <label>
                 <span>Password</span>
                 <div className={styles.field}>
@@ -186,10 +243,10 @@ export function AccountPage() {
                 </div>
               ) : (
                 <label className={styles.consent}>
-                  <input type="checkbox" required />
+                  <input type="checkbox" name="privacyAccepted" required />
                   <span>
-                    I agree to the <a href="#terms">terms</a> and{" "}
-                    <a href="#privacy">privacy policy</a>.
+                    I agree to the privacy statement and consent to Brew &amp; Sip using my details
+                    to manage my account and contact me about account-related matters.
                   </span>
                 </label>
               )}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   futureSlot,
+  reservationGatheringTypes,
   reservationPolicy,
   reservationTimes,
   validReservationDuration,
@@ -77,7 +78,11 @@ export async function POST(request: NextRequest) {
   const date = text("date"),
     time = text("time"),
     name = text("name"),
+    email = text("email"),
     phone = text("phone"),
+    gatheringType = text("gatheringType"),
+    gatheringOther = text("gatheringOther"),
+    foodAndBeverage = text("foodAndBeverage"),
     requestId = text("requestId");
   const guests = body.guests;
   const duration = body.duration;
@@ -90,14 +95,31 @@ export async function POST(request: NextRequest) {
   if (
     name.length < 2 ||
     name.length > 80 ||
+    email.length > 254 ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
     !/^[+\d\s().-]{7,30}$/.test(phone) ||
     phone.replace(/\D/g, "").length < 7 ||
     !/^[0-9a-f-]{36}$/i.test(requestId)
   )
     return reply(
       {
-        error: "Please enter your name and a valid mobile number.",
+        error: "Please enter the host's name, a valid email address, and a valid mobile number.",
       },
+      400
+    );
+  if (!reservationGatheringTypes.some((type) => type === gatheringType))
+    return reply({ error: "Please choose a type of gathering." }, 400);
+  if (
+    (gatheringType === "Other" && (gatheringOther.length < 2 || gatheringOther.length > 200)) ||
+    (gatheringType !== "Other" && gatheringOther.length > 0)
+  )
+    return reply(
+      { error: "Please explain your gathering when choosing Other (2–200 characters)." },
+      400
+    );
+  if (foodAndBeverage.length < 2 || foodAndBeverage.length > 1000)
+    return reply(
+      { error: "Please describe your food and beverage choices (2–1000 characters)." },
       400
     );
   try {
@@ -107,7 +129,11 @@ export async function POST(request: NextRequest) {
       guests,
       duration,
       name,
+      email,
       phone,
+      gatheringType,
+      gatheringOther,
+      foodAndBeverage,
       requestId,
     });
     if (!record)
