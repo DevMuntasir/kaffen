@@ -1,7 +1,6 @@
 "use client";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
-  ArrowLeft,
   CalendarDays,
   Check,
   ChevronLeft,
@@ -21,6 +20,7 @@ import {
   latestReservationDate,
   reservationPolicy,
   restaurantNow,
+  validReservationDuration,
   type ReservationReceipt,
 } from "@/lib/reservation";
 
@@ -58,10 +58,9 @@ export function BookingBanner({ onBook }: { onBook: () => void }) {
 }
 
 export function BookingModal({ onClose }: { onClose: () => void }) {
-  const [step, setStep] = useState<"table" | "details">("table");
   const [date, setDate] = useState(() => restaurantNow().date);
-  const [guests, setGuests] = useState(2);
-  const [duration, setDuration] = useState(90);
+  const [guests, setGuests] = useState<number | "">(2);
+  const [duration, setDuration] = useState<number | "">(90);
   const [calendarMonth, setCalendarMonth] = useState(() => restaurantNow().date.slice(0, 7));
   const [calendarAvailability, setCalendarAvailability] = useState<Record<string, number>>({});
   const [calendarLoading, setCalendarLoading] = useState(true);
@@ -71,18 +70,14 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [refresh, setRefresh] = useState(0);
-  const [contact, setContact] = useState({
-    name: "",
-    profession: "",
-    email: "",
-    phone: "",
-    notes: "",
-    gatheringType: "Professional meeting",
-    gatheringOther: "",
-    depositMethod: "Web",
-    foodAndBeverage: "",
-    privacyAccepted: false,
-  });
+  const [contact, setContact] = useState({ name: "", phone: "" });
+  const validSelection =
+    typeof guests === "number" &&
+    Number.isInteger(guests) &&
+    guests >= 1 &&
+    guests <= reservationPolicy.maxGuests &&
+    typeof duration === "number" &&
+    validReservationDuration(duration);
   const [receipt, setReceipt] = useState<ReservationReceipt | null>(null);
   const requestId = useRef("");
   const submitting = useRef(false);
@@ -93,6 +88,10 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
     setError("");
     setTimes([]);
     setTime("");
+    if (!validSelection) {
+      setLoading(false);
+      return;
+    }
     fetch(
       `/api/reservations?date=${encodeURIComponent(date)}&guests=${guests}&duration=${duration}`,
       {
@@ -113,11 +112,16 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
-  }, [date, guests, duration, refresh]);
+  }, [date, guests, duration, refresh, validSelection]);
 
   useEffect(() => {
     const controller = new AbortController();
     setCalendarLoading(true);
+    if (!validSelection) {
+      setCalendarAvailability({});
+      setCalendarLoading(false);
+      return;
+    }
     fetch(`/api/reservations?month=${calendarMonth}&guests=${guests}&duration=${duration}`, {
       signal: controller.signal,
       cache: "no-store",
@@ -135,11 +139,11 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
         if (!controller.signal.aborted) setCalendarLoading(false);
       });
     return () => controller.abort();
-  }, [calendarMonth, guests, duration, refresh]);
+  }, [calendarMonth, guests, duration, refresh, validSelection]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting.current) return;
+    if (submitting.current || !validSelection || loading || !times.includes(time)) return;
     submitting.current = true;
     setSaving(true);
     setError("");
@@ -160,7 +164,6 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 409 || response.status === 400) {
-          setStep("table");
           setTime("");
           requestId.current = "";
         }
@@ -199,8 +202,7 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
             </span>
           </div>
           <p className="reservation-small">
-            Save your reference for your visit. For changes, contact {site.email}. Email
-            confirmations are not sent automatically.
+            Save your reference for your visit. For changes, contact {site.email}.
           </p>
           <Button onClick={onClose}>All done</Button>
         </div>
@@ -209,72 +211,80 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
           <p className="reservation-intro">
             Check space availability, choose your meeting length, and tell us how we can host you.
           </p>
-          <ol className="reservation-steps" aria-label="Reservation progress">
-            <li aria-current={step === "table" ? "step" : undefined}>
-              <span>{step === "details" ? <Check size={14} /> : "1"}</span> Find a table
-            </li>
-            <li aria-current={step === "details" ? "step" : undefined}>
-              <span>2</span> Your details
-            </li>
-          </ol>
           {error && (
             <div className="reservation-error" role="alert">
               {error}
             </div>
           )}
-          {step === "table" ? (
-            <form
-              className="booking-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (time && times.includes(time)) {
-                  setError("");
-                  setStep("details");
-                }
-              }}
-            >
+          <form className="booking-form" onSubmit={submit} aria-busy={saving}>
+            <fieldset className="reservation-fields" disabled={saving}>
+              <label>
+                Name
+                <input
+                  name="name"
+                  autoComplete="name"
+                  required
+                  minLength={2}
+                  maxLength={80}
+                  placeholder="Full name"
+                  value={contact.name}
+                  onChange={(event) => setContact({ ...contact, name: event.target.value })}
+                />
+              </label>
+              <label>
+                Mobile number
+                <input
+                  name="phone"
+                  autoComplete="tel"
+                  type="tel"
+                  required
+                  minLength={7}
+                  maxLength={30}
+                  placeholder="Your mobile number"
+                  value={contact.phone}
+                  onChange={(event) => setContact({ ...contact, phone: event.target.value })}
+                />
+              </label>
               <label htmlFor="booking-guests">
                 Party size
-                <select
+                <input
+                  type="number"
+                  required
+                  min={1}
+                  max={reservationPolicy.maxGuests}
+                  step={1}
                   id="booking-guests"
                   value={guests}
                   onChange={(event) => {
                     setLoading(true);
                     setTime("");
-                    setGuests(Number(event.target.value));
+                    setGuests(event.target.value === "" ? "" : Number(event.target.value));
                   }}
-                >
-                  {Array.from({ length: reservationPolicy.maxGuests }, (_, i) => i + 1).map((n) => (
-                    <option key={n} value={n}>
-                      {n} {n === 1 ? "person" : "people"}
-                    </option>
-                  ))}
-                </select>
+                />
               </label>
               <label htmlFor="booking-duration">
-                Booking length
-                <select
+                Booking length (minutes)
+                <input
+                  type="number"
+                  required
+                  min={reservationPolicy.minDuration}
+                  max={reservationPolicy.maxDuration}
+                  step={1}
                   id="booking-duration"
                   value={duration}
                   onChange={(event) => {
                     setLoading(true);
                     setTime("");
-                    setDuration(Number(event.target.value));
+                    setDuration(event.target.value === "" ? "" : Number(event.target.value));
                   }}
-                >
-                  {reservationPolicy.durations.map((minutes) => (
-                    <option key={minutes} value={minutes}>
-                      {displayDuration(minutes)}
-                    </option>
-                  ))}
-                </select>
+                />
               </label>
               <AvailabilityCalendar
                 month={calendarMonth}
                 selectedDate={date}
                 availability={calendarAvailability}
                 loading={calendarLoading}
-                duration={duration}
+                duration={duration || 0}
                 onMonthChange={setCalendarMonth}
                 onSelect={(selected) => {
                   setLoading(true);
@@ -328,179 +338,11 @@ export function BookingModal({ onClose }: { onClose: () => void }) {
                 Availability reflects your selected meeting length. For groups larger than 8,
                 contact {site.email}.
               </p>
-              <Button type="submit" disabled={!time || loading}>
-                Continue to your details
-              </Button>
-            </form>
-          ) : (
-            <form className="booking-form" onSubmit={submit} aria-busy={saving}>
-              <div className="reservation-review">
-                <ReservationSummary date={date} time={time} guests={guests} duration={duration} />
-                <button
-                  className="reservation-text-button"
-                  type="button"
-                  disabled={saving}
-                  onClick={() => {
-                    requestId.current = "";
-                    setError("");
-                    setStep("table");
-                  }}
-                >
-                  <ArrowLeft size={14} /> Change
-                </button>
-              </div>
-              <label className="reservation-full">
-                Point of contact / host
-                <input
-                  name="name"
-                  autoComplete="name"
-                  required
-                  minLength={2}
-                  maxLength={80}
-                  placeholder="Full name"
-                  value={contact.name}
-                  onChange={(event) => setContact({ ...contact, name: event.target.value })}
-                />
-              </label>
-              <label className="reservation-full">
-                Profession
-                <input
-                  name="profession"
-                  autoComplete="organization-title"
-                  required
-                  minLength={2}
-                  maxLength={100}
-                  placeholder="Your profession or role"
-                  value={contact.profession}
-                  onChange={(event) => setContact({ ...contact, profession: event.target.value })}
-                />
-              </label>
-              <label>
-                Type of gathering
-                <select
-                  name="gatheringType"
-                  required
-                  value={contact.gatheringType}
-                  onChange={(event) =>
-                    setContact({
-                      ...contact,
-                      gatheringType: event.target.value,
-                      gatheringOther: event.target.value === "Other" ? contact.gatheringOther : "",
-                    })
-                  }
-                >
-                  <option>Professional meeting</option>
-                  <option>Adda</option>
-                  <option>Special social event</option>
-                  <option>Other</option>
-                </select>
-              </label>
-              <label>
-                Reservation deposit
-                <select
-                  name="depositMethod"
-                  required
-                  value={contact.depositMethod}
-                  onChange={(event) =>
-                    setContact({ ...contact, depositMethod: event.target.value })
-                  }
-                >
-                  <option value="Web">Pay on the web</option>
-                  <option value="In person">Pay in person</option>
-                </select>
-              </label>
-              {contact.gatheringType === "Other" && (
-                <label className="reservation-full">
-                  Tell us about your gathering
-                  <input
-                    name="gatheringOther"
-                    required
-                    minLength={2}
-                    maxLength={200}
-                    placeholder="Describe the gathering"
-                    value={contact.gatheringOther}
-                    onChange={(event) =>
-                      setContact({ ...contact, gatheringOther: event.target.value })
-                    }
-                  />
-                </label>
-              )}
-              <label className="reservation-full">
-                Food and beverage choices
-                <textarea
-                  name="foodAndBeverage"
-                  rows={4}
-                  required
-                  minLength={2}
-                  maxLength={1000}
-                  placeholder="Describe the food, coffee, tea, or other beverage options you would like."
-                  value={contact.foodAndBeverage}
-                  onChange={(event) =>
-                    setContact({ ...contact, foodAndBeverage: event.target.value })
-                  }
-                />
-              </label>
-              <label>
-                Email address
-                <input
-                  name="email"
-                  autoComplete="email"
-                  type="email"
-                  required
-                  maxLength={254}
-                  placeholder="you@example.com"
-                  value={contact.email}
-                  onChange={(event) => setContact({ ...contact, email: event.target.value })}
-                />
-              </label>
-              <label>
-                Phone number
-                <input
-                  name="phone"
-                  autoComplete="tel"
-                  type="tel"
-                  required
-                  minLength={7}
-                  maxLength={30}
-                  placeholder="Your phone number"
-                  value={contact.phone}
-                  onChange={(event) => setContact({ ...contact, phone: event.target.value })}
-                />
-              </label>
-              <label className="reservation-full">
-                Special requests <span className="reservation-optional">Optional</span>
-                <textarea
-                  name="notes"
-                  rows={3}
-                  maxLength={500}
-                  placeholder="A celebration, accessibility needs, or anything we should know?"
-                  value={contact.notes}
-                  onChange={(event) => setContact({ ...contact, notes: event.target.value })}
-                />
-              </label>
-              <p className="form-note">
-                We’ll use these details to coordinate your meeting and reservation deposit.
-              </p>
-              <label className="privacy-consent reservation-full">
-                <input
-                  name="privacyAccepted"
-                  type="checkbox"
-                  required
-                  checked={contact.privacyAccepted}
-                  onChange={(event) =>
-                    setContact({ ...contact, privacyAccepted: event.target.checked })
-                  }
-                />
-                <span>
-                  I have read and agree to the privacy statement. I consent to the use of my contact
-                  and meeting details to manage this reservation.
-                </span>
-              </label>
-              <Button type="submit" disabled={saving}>
-                {saving ? "Reserving your table…" : "Confirm reservation"}
-              </Button>
-            </form>
-          )}
+            </fieldset>
+            <Button type="submit" disabled={!time || loading || saving || !validSelection}>
+              {saving ? "Reserving your table…" : "Confirm reservation"}
+            </Button>
+          </form>
         </>
       )}
     </Modal>

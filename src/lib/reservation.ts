@@ -3,19 +3,25 @@ export const reservationPolicy = {
   timeZoneLabel: "New York time",
   capacity: 24,
   duration: 90,
-  durations: [60, 90, 120, 180] as const,
+  minDuration: 1,
+  maxDuration: 180,
   maxGuests: 8,
   advanceDays: 90,
 };
 
 export function validReservationDuration(duration: number) {
-  return reservationPolicy.durations.some((value) => value === duration);
+  return (
+    Number.isInteger(duration) &&
+    duration >= reservationPolicy.minDuration &&
+    duration <= reservationPolicy.maxDuration
+  );
 }
 
 export function displayDuration(duration: number) {
-  if (duration < 60) return `${duration} minutes`;
-  const hours = duration / 60;
-  return `${Number.isInteger(hours) ? hours : hours.toFixed(1)} ${hours === 1 ? "hour" : "hours"}`;
+  if (duration < 60) return `${duration} ${duration === 1 ? "minute" : "minutes"}`;
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+  return `${hours} ${hours === 1 ? "hour" : "hours"}${minutes ? ` ${minutes} minutes` : ""}`;
 }
 
 export const reservationTimes = Array.from({ length: 24 }, (_, i) => {

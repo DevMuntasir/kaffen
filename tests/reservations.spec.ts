@@ -22,15 +22,7 @@ const details = () => ({
   guests: 8,
   duration: 90,
   name: "Reservation Test",
-  profession: "Event coordinator",
-  email: "test@example.com",
   phone: "+1 212 555 0101",
-  notes: "",
-  gatheringType: "Adda",
-  gatheringOther: "",
-  depositMethod: "Web",
-  foodAndBeverage: "Coffee and pastries",
-  privacyAccepted: true,
 });
 
 test("validates reservation input and rejects past dates", async ({ request }) => {
@@ -38,8 +30,13 @@ test("validates reservation input and rejects past dates", async ({ request }) =
   expect((await request.get(`/api/reservations?date=${futureDate(3)}&guests=9`)).status()).toBe(
     400
   );
+  for (const invalid of [{ guests: 1.5 }, { duration: 0 }, { duration: 181 }, { duration: 75.5 }]) {
+    expect(
+      (await request.post("/api/reservations", { data: { ...details(), ...invalid } })).status()
+    ).toBe(400);
+  }
   expect(
-    (await request.post("/api/reservations", { data: { ...details(), email: "invalid" } })).status()
+    (await request.post("/api/reservations", { data: { ...details(), phone: "invalid" } })).status()
   ).toBe(400);
   expect(
     (
@@ -79,27 +76,55 @@ test("saves once, prevents concurrent overbooking and accounts for overlapping s
   ).toBe(409);
 });
 
-test("mobile reservation flow supports changing details without losing contact information", async ({
-  page,
-}) => {
+test("mobile reservation submits name and mobile on a single screen", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/");
   await page.getByRole("button", { name: "Reserve a table", exact: true }).click();
   const dialog = page.getByRole("dialog");
-  await expect(dialog.getByRole("button", { name: "Continue to your details" })).toBeDisabled();
+  const confirm = dialog.getByRole("button", { name: "Confirm reservation" });
+  await expect(confirm).toBeDisabled();
+  await expect(dialog.getByRole("combobox")).toHaveCount(0);
+  await expect(dialog.getByRole("textbox")).toHaveCount(2);
+  await dialog.getByRole("textbox", { name: "Name", exact: true }).fill("Mobile Guest");
+  await dialog.getByLabel("Mobile number").fill("01712345678");
+  await dialog.getByRole("spinbutton", { name: "Party size" }).fill("3");
+  await dialog.getByRole("spinbutton", { name: "Booking length" }).fill("75");
   const meetingDate = futureDate(10);
   await dialog
     .getByRole("button", { name: new RegExp(`^Select ${calendarDateLabel(meetingDate)}`) })
     .click();
   await dialog.getByRole("radio", { name: "9:00 AM", exact: true }).check();
-  await dialog.getByRole("button", { name: "Continue to your details" }).click();
-  await dialog.getByLabel("Point of contact / host").fill("Mobile Guest");
-  await dialog.getByRole("button", { name: "Change", exact: true }).click();
+  await dialog.getByRole("spinbutton", { name: "Booking length" }).clear();
+  await expect(confirm).toBeDisabled();
+  await dialog.getByRole("spinbutton", { name: "Booking length" }).fill("75");
   await dialog.getByRole("radio", { name: "10:00 AM", exact: true }).check();
-  await dialog.getByRole("button", { name: "Continue to your details" }).click();
-  await expect(dialog.getByLabel("Point of contact / host")).toHaveValue("Mobile Guest");
-  await expect(dialog.locator(".reservation-summary")).toContainText("10:00 AM");
+  await expect(dialog.getByRole("textbox", { name: "Name", exact: true })).toHaveValue(
+    "Mobile Guest"
+  );
   expect(await dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
-  await dialog.screenshot({ path: test.info().outputPath("reservation-mobile.png") });
+  const submitted = page.waitForRequest(
+    (request) => request.url().endsWith("/api/reservations") && request.method() === "POST"
+  );
+  await confirm.click();
+  const payload = (await submitted).postDataJSON();
+  expect(payload).toMatchObject({
+    name: "Mobile Guest",
+    phone: "01712345678",
+    guests: 3,
+    duration: 75,
+  });
+  expect(Object.keys(payload).sort()).toEqual([
+    "date",
+    "duration",
+    "guests",
+    "name",
+    "phone",
+    "requestId",
+    "time",
+  ]);
+  await expect(dialog).toContainText("Your Adda Meeting is reserved");
+  await expect(dialog.locator(".reservation-summary")).toContainText(
+    "3 guests · 1 hour 15 minutes"
+  );
 });
