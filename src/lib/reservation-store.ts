@@ -11,15 +11,7 @@ export type Reservation = {
   guests: number;
   duration: number;
   name: string;
-  profession: string;
-  email: string;
   phone: string;
-  notes: string;
-  gatheringType: string;
-  gatheringOther: string;
-  depositMethod: string;
-  foodAndBeverage: string;
-  privacyAccepted: boolean;
   createdAt: string;
 };
 

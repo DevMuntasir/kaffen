@@ -1727,3 +1727,14 @@ select {
     padding: 18px;
   }
 }
+
+.booking-form .reservation-fields {
+  display: grid;
+  grid-template-columns: inherit;
+  gap: inherit;
+  grid-column: 1 / -1;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
